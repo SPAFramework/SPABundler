@@ -1,0 +1,12 @@
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\bin\Debug\SpaBundlerTests.dll
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\bin\Debug\SpaBundlerTests.pdb
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\bin\Debug\SpaBundler.dll
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\bin\Debug\HtmlAgilityPack.dll
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\bin\Debug\AjaxMin.dll
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\bin\Debug\SpaBundler.pdb
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\bin\Debug\HtmlAgilityPack.xml
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\obj\Debug\SpaBundlerTests.csprojResolveAssemblyReference.cache
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\obj\Debug\SpaBundlerTests.dll
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\obj\Debug\SpaBundlerTests.pdb
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\bin\Debug\SpaBundler.xml

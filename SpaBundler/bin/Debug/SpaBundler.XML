@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SpaBundler</name>
+    </assembly>
+    <members>
+        <member name="T:SpaBundler.Optimizer">
+            <summary>
+            Function for optimizing various web mime-types
+            </summary>
+            <param name="fileBody">A string containing the body of the file</param>
+            <returns>Optimized string containing the body of the file</returns>
+        </member>
+        <member name="T:SpaBundler.Bundler">
+            <summary>
+            Bundles and minifies, Images, Fonts, CSS, JS, and Html into one optimized html file.
+            </summary>
+        </member>
+        <member name="M:SpaBundler.Bundler.BundleToFile(System.String,System.String)">
+            <summary>
+            Bundles and minifies, Images, Fonts, CSS, JS, and Html into one optimized html file.
+            </summary>
+            <param name="inputPath">The path for the starting page of the Website. (ex. c:\MyWebsite\Intex.html)</param>
+            <param name="outputPath">The path where the bundled file should be saved</param>
+        </member>
+        <member name="M:SpaBundler.Bundler.BundleToString(System.String)">
+            <summary>
+            Bundles and minifies, Images, Fonts, CSS, JS, and Html into a string.
+            </summary>
+            <param name="inputPath">The path for the starting page of the Website. (ex. c:\MyWebsite\Intex.html)</param>
+            <returns>String containing the website</returns>
+        </member>
+        <member name="P:SpaBundler.Bundler.OptimizeHtml">
+            <summary>
+            Function to optimize HTML EX: bundler.OptimizeHtml = (html => minifier.MinifyStyleSheet(html))
+            </summary>
+        </member>
+        <member name="P:SpaBundler.Bundler.OptimizeCss">
+            <summary>
+            Function to optimize Css EX: bundler.OptimizeCss = (css => minifier.MinifyStyleSheet(css))
+            </summary>
+        </member>
+        <member name="P:SpaBundler.Bundler.OptimizeJs">
+            <summary>
+            Function to optimize JS EX: bundler.OptimizeJs = (js => minifier.MinifyStyleSheet(js))
+            </summary>
+        </member>
+        <member name="M:SpaBundler.WebFileUtilities.GetHtmlReferences(System.String)">
+            <summary>
+            Extracts references uris from a HTML string 
+            </summary>
+            <param name="html">HTML String</param>
+            <returns> A list of string reference uris</returns>
+        </member>
+        <member name="M:SpaBundler.WebFileUtilities.GetCssReferences(System.String)">
+            <summary>
+            Extracts refference uris from a CSS string
+            </summary>
+            <param name="css">CSS string</param>
+            <returns>A list of reference uris</returns>
+        </member>
+        <member name="M:SpaBundler.WebFileUtilities.GetFullPathFromUri(System.String,System.String)">
+            <summary>
+            Gets the absolute path from a basePath and uri
+            </summary>
+            <param name="basePath">Website base path (must end with \)</param>
+            <param name="uri">Relative resource uri</param>
+            <returns>Absolute path as a string</returns>
+        </member>
+        <member name="T:SpaBundler.WebFile">
+            <summary>
+            Class represents any file type that is used in a Website
+            </summary>
+        </member>
+        <member name="M:SpaBundler.WebFile.#ctor(System.String,System.String)">
+            <summary>
+            Constructs a webfile
+            </summary>
+            <param name="path">String path of physical file</param>
+            <param name="reference">String reference that calls this file</param>
+        </member>
+        <member name="P:SpaBundler.WebFile.Path">
+            <summary>
+            Gets or sets file path
+            </summary>
+        </member>
+        <member name="P:SpaBundler.WebFile.Name">
+            <summary>
+            Gets the name of the file
+            </summary>
+        </member>
+        <member name="P:SpaBundler.WebFile.MimeType">
+            <summary>
+            Gets file mime-type
+            </summary>
+        </member>
+        <member name="P:SpaBundler.WebFile.Body">
+            <summary>
+            Gets or sets the file body content 
+            </summary>
+        </member>
+        <member name="P:SpaBundler.WebFile.BodyBytes">
+            <summary>
+            Gets file body content as a byte array
+            </summary>
+        </member>
+        <member name="P:SpaBundler.WebFile.DataUri">
+            <summary>
+            Gets body content as Base64 data-uri
+            </summary>
+        </member>
+        <member name="P:SpaBundler.WebFile.DependencyList">
+            <summary>
+            Gets or sets the dependency list of webfiles for the webfile
+            </summary>
+        </member>
+    </members>
+</doc>

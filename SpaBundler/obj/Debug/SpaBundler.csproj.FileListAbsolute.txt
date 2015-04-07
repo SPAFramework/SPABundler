@@ -1,0 +1,10 @@
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\bin\Debug\SpaBundler.dll
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\bin\Debug\SpaBundler.pdb
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\bin\Debug\HtmlAgilityPack.dll
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\bin\Debug\HtmlAgilityPack.xml
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\obj\Debug\SpaBundler.dll
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\obj\Debug\SpaBundler.pdb
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\obj\Debug\SpaBundler.rewritten
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\bin\Debug\SpaBundler.XML
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\obj\Debug\SpaBundler.csprojResolveAssemblyReference.cache
