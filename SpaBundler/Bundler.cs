@@ -57,7 +57,7 @@ namespace SpaBundler
 
         private WebFile Bundle(WebFile inputFile)
         {
-            Contract.Requires(inputFile.Body.Contains("<head>") && inputFile.Body.Contains("<body>"), "Html must contain <head> and <body> tags.");
+            Contract.Requires(inputFile.Body.Contains("<head>") || inputFile.Body.Contains("<body>"), "Html must contain <head> and <body> tags.");
             var outputFile = inputFile;
 
             //Bundling 2nd Layer (Font and Images)
