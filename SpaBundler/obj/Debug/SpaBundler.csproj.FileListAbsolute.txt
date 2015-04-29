@@ -7,3 +7,4 @@ C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\bin\Debug\HtmlAgi
 C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\obj\Debug\SpaBundler.rewritten
 C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\obj\Debug\SpaBundler.dll
 C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\obj\Debug\SpaBundler.pdb
+C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundler\obj\Debug\SpaBundler.csprojResolveAssemblyReference.cache

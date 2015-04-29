@@ -30,6 +30,13 @@
             <param name="inputPath">The path for the starting page of the Website. (ex. c:\MyWebsite\Intex.html)</param>
             <returns>String containing the website</returns>
         </member>
+        <member name="M:SpaBundler.Bundler.Bundle(System.String)">
+            <summary>
+            This function bundles CSS, JavaScript, and Images into a single html file
+            </summary>
+            <param name="inputPath">The path of the main html file</param>
+            <returns>A WebFile containg the bundle</returns>
+        </member>
         <member name="P:SpaBundler.Bundler.OptimizeHtml">
             <summary>
             Function to optimize HTML EX: bundler.OptimizeHtml = (html => minifier.MinifyStyleSheet(html))
@@ -50,14 +57,14 @@
             Extracts references uris from a HTML string 
             </summary>
             <param name="html">HTML String</param>
-            <returns> A list of string reference uris</returns>
+            <returns> IEnumerable collection of string reference uris</returns>
         </member>
         <member name="M:SpaBundler.WebFileUtilities.GetCssReferences(System.String)">
             <summary>
             Extracts refference uris from a CSS string
             </summary>
             <param name="css">CSS string</param>
-            <returns>A list of reference uris</returns>
+            <returns>IEnumerable collection of string reference uris</returns>
         </member>
         <member name="M:SpaBundler.WebFileUtilities.GetFullPathFromUri(System.String,System.String)">
             <summary>
@@ -67,9 +74,30 @@
             <param name="uri">Relative resource uri</param>
             <returns>Absolute path as a string</returns>
         </member>
+        <member name="M:SpaBundler.WebFileUtilities.RemoveReferenceNodes(System.String@,System.String)">
+            <summary>
+            Removes Nodes that reference a specific uri in a html string
+            </summary>
+            <param name="html">Html String as reference</param>
+            <param name="uri">Uri Reference</param>
+        </member>
+        <member name="M:SpaBundler.WebFileUtilities.InsertNode(System.String@,System.String,System.String,System.String)">
+            <summary>
+            Inserts a Html node inside a parent node in a html document
+            </summary>
+            <param name="html">Html string as reference</param>
+            <param name="parentTagName">The tag name of the parent Ex "head"</param>
+            <param name="tagName">The tag name for the node you want to create</param>
+            <param name="content">The content inside the node</param>
+        </member>
         <member name="T:SpaBundler.WebFile">
             <summary>
             Class represents any file type that is used in a Website
+            </summary>
+        </member>
+        <member name="F:SpaBundler.WebFile._basePath">
+            <summary>
+            Holds the base path for the website
             </summary>
         </member>
         <member name="M:SpaBundler.WebFile.#ctor(System.String,System.String)">
@@ -78,6 +106,26 @@
             </summary>
             <param name="path">String path of physical file</param>
             <param name="reference">String reference that calls this file</param>
+        </member>
+        <member name="M:SpaBundler.WebFile.GetDependencies(System.String)">
+            <summary>
+            Populates dependency list with Webfiles from the references in the body of the file passed in
+            </summary>
+            <param name="bodyString">The body content of the file</param>
+            <returns>A list of WebFiles</returns>
+        </member>
+        <member name="M:SpaBundler.WebFile.GetValidWebFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Checks a list of Uri if the physical files exist. If they exist a matching webfile is created.
+            </summary>
+            <param name="uriList">Enumerable List of URIs</param>
+            <returns>Enumerable List of Validated Webfiles</returns>
+        </member>
+        <member name="M:SpaBundler.WebFile.Save(System.String)">
+            <summary>
+            Save As the WebFile 
+            </summary>
+            <param name="path">Path where to save the file</param>
         </member>
         <member name="P:SpaBundler.WebFile.Path">
             <summary>

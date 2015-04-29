@@ -2,7 +2,6 @@
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using HtmlAgilityPack;
 
 namespace SpaBundler
 {
@@ -30,7 +29,6 @@ namespace SpaBundler
         /// Function to optimize JS EX: bundler.OptimizeJs = (js => minifier.MinifyStyleSheet(js))
         /// </summary>
         public Optimizer OptimizeJs { get; set; }
-
         /// <summary>
         /// Bundles and minifies, Images, Fonts, CSS, JS, and Html into one optimized html file.
         /// </summary>
@@ -38,11 +36,12 @@ namespace SpaBundler
         /// <param name="outputPath">The path where the bundled file should be saved</param>
         public void BundleToFile(string inputPath, string outputPath)
         {
-            var inputFile = new WebFile(inputPath);
-            var ouputFile = Bundle(inputFile);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            Contract.Requires<DirectoryNotFoundException>(outputPath != null && Directory.Exists(Path.GetDirectoryName(outputPath)), "Output path must point to a valid directory");
+            Contract.Ensures(File.Exists(outputPath), "The file bundled was not created");
+            var ouputFile = Bundle(inputPath);
             ouputFile.Save(outputPath);
         }
-
         /// <summary>
         /// Bundles and minifies, Images, Fonts, CSS, JS, and Html into a string.
         /// </summary>
@@ -50,58 +49,52 @@ namespace SpaBundler
         /// <returns>String containing the website</returns>
         public string BundleToString(string inputPath)
         {
-            var inputFile = new WebFile(inputPath);
-            var outputFile = Bundle(inputFile);
+            var outputFile = Bundle(inputPath);
             return outputFile.Body;
         }
 
-        private WebFile Bundle(WebFile inputFile)
+        /// <summary>
+        /// This function bundles CSS, JavaScript, and Images into a single html file
+        /// </summary>
+        /// <param name="inputPath">The path of the main html file</param>
+        /// <returns>A WebFile containg the bundle</returns>
+        private WebFile Bundle(String inputPath)
         {
-            Contract.Requires(inputFile.Body.Contains("<head>") || inputFile.Body.Contains("<body>"), "Html must contain <head> and <body> tags.");
+            var inputFile = new WebFile(inputPath);
             var outputFile = inputFile;
+            
 
             //Bundling 2nd Layer (Font and Images)
             foreach (var f in inputFile.DependencyList.Where(x => x.DependencyList.Any()))
-                foreach (var d in f.DependencyList)
+                foreach (var d in f.DependencyList.Where(x=> x.Body !=null))
                     f.Body = f.Body.Replace(d.ReferenceUri, d.DataUri);
 
             //Bundling 1st Layer Text-Based (JS and CSS)
             var html = inputFile.Body;
-            var css = inputFile.DependencyList.Where(x => x.MimeType.Contains("css"))
+            var css = inputFile.DependencyList.Where(x => x.MimeType.Contains("css") && x.Body != null)
                 .Aggregate(String.Empty, (current, dependency) => current + dependency.Body);
-            var js = inputFile.DependencyList.Where(x => x.MimeType.Contains("javascript"))
+            var js = inputFile.DependencyList.Where(x => x.MimeType.Contains("javascript") && x.Body != null)
                 .Aggregate(String.Empty, (current, dependency) => current + dependency.Body);
 
             //Optimization
-            if(OptimizeHtml != null)
-                html = OptimizeHtml(html);
-            if (OptimizeCss != null)
-                css = OptimizeCss(css);
-            if (OptimizeJs != null)
-                js = OptimizeJs(js);
-
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html);
+            if(OptimizeHtml != null) html = OptimizeHtml(html);
+            if (OptimizeCss != null) css = OptimizeCss(css);
+            if (OptimizeJs != null) js = OptimizeJs(js);
 
             //Remove Imported dependency nodes 
-            foreach (var n in inputFile.DependencyList.Where(x => x.MimeType.Contains("css") || x.MimeType.Contains("javascript"))
-                .SelectMany(d => doc.DocumentNode.SelectNodes("//*[contains(@src, '" + d.ReferenceUri + "')] | //*[contains(@href,'" + d.ReferenceUri + "')]")))
-                n.Remove();
+            foreach (var dependency in inputFile.DependencyList.Where(x => (x.MimeType.Contains("css") || x.MimeType.Contains("javascript")) && x.Body != null))
+                WebFileUtilities.RemoveReferenceNodes(ref html, dependency.ReferenceUri);
 
-            //Add style
-            var header = doc.DocumentNode.Descendants("head").First();
-            header.AppendChild(HtmlNode.CreateNode(String.Format("<style>{0}</style>", css)));
-
-            //Add script
-            var body = doc.DocumentNode.Descendants("body").First();
-            body.AppendChild(HtmlNode.CreateNode(String.Format("<script>{0}</script>", js)));
+            WebFileUtilities.InsertNode(ref html,"head","style", css); //Add Styles
+            WebFileUtilities.InsertNode(ref html, "body", "script", js); //Add Scripts
 
             //Bundling 1st Layer Binary (Images)
-            foreach (var d in inputFile.DependencyList.Where(x => !x.MimeType.Contains("css") || !x.MimeType.Contains("javascript")))
-                doc.DocumentNode.InnerHtml = doc.DocumentNode.InnerHtml.Replace(d.ReferenceUri, d.DataUri);
+            html = inputFile.DependencyList.Where(x => (!x.MimeType.Contains("css") || !x.MimeType.Contains("javascript")) && x.Body != null)
+                .Aggregate(html, (current, d) => current.Replace(d.ReferenceUri, d.DataUri));
 
-            outputFile.Body = doc.DocumentNode.OuterHtml;
+            outputFile.Body = html;
             return outputFile;
         }
+
     }
 }

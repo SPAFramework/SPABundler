@@ -41,6 +41,10 @@ namespace SpaBundler
         /// </summary>
         public IList<WebFile> DependencyList { get; private set; }
         public string ReferenceUri { get; private set; }
+        /// <summary>
+        /// Holds the base path for the website
+        /// </summary>
+        private readonly string _basePath;
 
         /// <summary>
         /// Constructs a webfile
@@ -49,35 +53,59 @@ namespace SpaBundler
         /// <param name="reference">String reference that calls this file</param>
         public WebFile(String path, string reference = null)
         {
-            Contract.Requires<FileNotFoundException>(File.Exists(path), "Path must point to an existing file");
+            Contract.Requires<FileNotFoundException>(File.Exists(path), "Path must point to an existing web file in the local file system");
             Path = path;
+            ReferenceUri = reference;
             Name = new FileInfo(path).Name;
             MimeType = MimeMapping.GetMimeMapping(path);
             Body = File.ReadAllText(Path);
             BodyBytes = File.ReadAllBytes(Path);
             DataUri = "data:" + MimeType + ";base64," + Convert.ToBase64String(BodyBytes);
-            DependencyList = GetDependencies(Path.Replace(Name, string.Empty), Body);
-            ReferenceUri = reference;
+            _basePath = Path.Replace(Name, string.Empty);
+            DependencyList = GetDependencies(Body);
+            
         }
 
 
-        private IList<WebFile> GetDependencies(string basePath, String bodyString)
+        /// <summary>
+        /// Populates dependency list with Webfiles from the references in the body of the file passed in
+        /// </summary>
+        /// <param name="bodyString">The body content of the file</param>
+        /// <returns>A list of WebFiles</returns>
+        private IList<WebFile> GetDependencies(String bodyString)
         {
             var dependencyList = new List<WebFile>();
+            IEnumerable<string> references = null;
             switch (MimeType)
             {
                 case "text/html":
-                    dependencyList.AddRange(WebFileUtilities.GetHtmlReferences(bodyString)
-                        .Select(uri => new WebFile(WebFileUtilities.GetFullPathFromUri(basePath, uri), uri)));
+                    references= WebFileUtilities.GetHtmlReferences(bodyString);
                     break;
                 case "text/css":
-                    dependencyList.AddRange(WebFileUtilities.GetCssReferences(Body)
-                        .Select(uri => new WebFile(WebFileUtilities.GetFullPathFromUri(basePath, uri), uri)));
+                    references = WebFileUtilities.GetCssReferences(bodyString);
                     break;
             }
+            if(references != null)
+                dependencyList.AddRange(GetValidWebFiles(references));
             return dependencyList;
         }
- 
+
+        /// <summary>
+        /// Checks a list of Uri if the physical files exist. If they exist a matching webfile is created.
+        /// </summary>
+        /// <param name="uriList">Enumerable List of URIs</param>
+        /// <returns>Enumerable List of Validated Webfiles</returns>
+        private IEnumerable<WebFile> GetValidWebFiles(IEnumerable<string> uriList)
+        {
+           return uriList.Select(uri => new {Path = WebFileUtilities.GetFullPathFromUri(_basePath, uri), Uri = uri})
+                        .Where(reference => File.Exists(reference.Path))
+                        .Select(reference => new WebFile(reference.Path, reference.Uri));
+        }
+
+        /// <summary>
+        /// Save As the WebFile 
+        /// </summary>
+        /// <param name="path">Path where to save the file</param>
         public void Save(String path)
         {
             using (var sw = new StreamWriter(path, false))
