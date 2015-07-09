@@ -37,6 +37,14 @@
             <param name="inputPath">The path of the main html file</param>
             <returns>A WebFile containg the bundle</returns>
         </member>
+        <member name="M:SpaBundler.Bundler.BundleDependenciesByType(System.Collections.Generic.IEnumerable{SpaBundler.WebFile},System.String)">
+            <summary>
+            Joins together web files of same type
+            </summary>
+            <param name="webFileList">A list of webfile</param>
+            <param name="fileType">String phrase contained in the mimetype of the file</param>
+            <returns>A string containing the bundled files.</returns>
+        </member>
         <member name="P:SpaBundler.Bundler.OptimizeHtml">
             <summary>
             Function to optimize HTML EX: bundler.OptimizeHtml = (html => minifier.MinifyStyleSheet(html))

@@ -27,10 +27,10 @@ namespace SpaBundlerTests
                 "</body></html>";
 
             var result = WebFileUtilities.GetHtmlReferences(testHtml);
-            Assert.IsTrue(result.Count == 3, "Should return 3 refferences");
-            Assert.AreEqual("../Scripts/bundle.js", result[0]);
-            Assert.AreEqual("../Styles/Main.css", result[1]);
-            Assert.AreEqual("Images/Logo.png", result[2]);
+            Assert.IsTrue(3 == result.Count(), "Should return 3 refferences");
+            Assert.AreEqual("../Scripts/bundle.js", result.ElementAt(0));
+            Assert.AreEqual("../Styles/Main.css", result.ElementAt(1));
+            Assert.AreEqual("Images/Logo.png", result.ElementAt(2));
         }
 
         [TestMethod]
@@ -54,16 +54,16 @@ namespace SpaBundlerTests
                                    "url('../Fonts/AppIcons.ttf') format('truetype');" +
                                    "font-weight: lighter;}";
             var result = WebFileUtilities.GetCssReferences(testCss);
-            Assert.IsTrue(result.Count == 5, "Should return only 5 items");
-            Assert.AreEqual("../Images/logo_light.png", result[0]);
-            Assert.AreEqual("../Fonts/AppIcons.eot", result[1]);
-            Assert.AreEqual("../Fonts/AppIcons.eot", result[2]);
+            Assert.IsTrue(5 == result.Count(), "Should return only 5 items");
+            Assert.AreEqual("../Images/logo_light.png", result.ElementAt(0));
+            Assert.AreEqual("../Fonts/AppIcons.eot", result.ElementAt(1));
+            Assert.AreEqual("../Fonts/AppIcons.eot", result.ElementAt(2));
         }
 
         [TestMethod]
         public void GetFullPathFromUriTest_UriWithDotSegments()
         {
-            const string basePath = @"C:\WebSites\SampleSite\Views\";
+            const string basePath = @"C:\WebSites\SampleSite\Views";
             const string uri = "../Images/Logo.png";
             var result = WebFileUtilities.GetFullPathFromUri(basePath, uri);
             Assert.AreEqual("C:\\WebSites\\SampleSite\\Images\\Logo.png", result);
@@ -72,8 +72,8 @@ namespace SpaBundlerTests
         [TestMethod]
         public void GetFullPathFromUriTest_UriWithoutDotSegments()
         {
-            const string basePath = @"C:\WebSites\SampleSite\Views\";
-            const string uri = "Images/Logo.png";
+            const string basePath = @"C:\WebSites\SampleSite\Views";
+            const string uri = "/Images/Logo.png";
             var result = WebFileUtilities.GetFullPathFromUri(basePath, uri);
             Assert.AreEqual("C:\\WebSites\\SampleSite\\Views\\Images\\Logo.png", result);
         }

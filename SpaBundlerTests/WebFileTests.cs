@@ -12,7 +12,7 @@ namespace SpaBundlerTests
         public void DependencyListTest_WithDependencies()
         {
             var wf = new WebFile(@"C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\Content\Main.html");
-            Assert.AreEqual(wf.DependencyList.Count, 3);
+            Assert.AreEqual(3, wf.DependencyList.Count);
         }
     }
 }

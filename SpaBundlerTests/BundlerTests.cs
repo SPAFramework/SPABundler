@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom;
+using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SpaBundler;
@@ -38,6 +39,22 @@ namespace SpaBundlerTests
         }
 
         [TestMethod]
+        public void BundlerTest_WithOutOptimizers()
+        {
+            var bundler = new Bundler();
+            var result = bundler.BundleToString(@"C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\Content\Main.html");
+            Assert.IsTrue(result != null);
+        }
+
+        [TestMethod]
+        public void BundlerTest_InterferenceWithTypescript()
+        {
+            var bundler = new Bundler();
+            var result = bundler.BundleToString(@"C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\Content\Main.html");
+            Assert.IsTrue(result.Contains("<reference path=\"Scripts/test.js\" />"));
+        }
+
+        [TestMethod]
         public void BundlerTest_SaveToFile()
         {
             var bundler = new Bundler();
@@ -56,6 +73,7 @@ namespace SpaBundlerTests
 
             bundler.BundleToFile(@"C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\Content\Main.html",
                 @"C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\Content\BundledMain.html");
+            Assert.IsTrue(File.Exists(@"C:\Users\DONO\Source\Workspaces\Verdicter\Verdicter\SpaBundlerTests\Content\BundledMain.html"));
             
         }
     }

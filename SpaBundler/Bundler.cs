@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
@@ -62,19 +63,16 @@ namespace SpaBundler
         {
             var inputFile = new WebFile(inputPath);
             var outputFile = inputFile;
-            
 
-            //Bundling 2nd Layer (Font and Images)
+            //Adding Font and Images to 2nd Layer
             foreach (var f in inputFile.DependencyList.Where(x => x.DependencyList.Any()))
-                foreach (var d in f.DependencyList.Where(x=> x.Body !=null))
+                foreach (var d in f.DependencyList)
                     f.Body = f.Body.Replace(d.ReferenceUri, d.DataUri);
 
             //Bundling 1st Layer Text-Based (JS and CSS)
             var html = inputFile.Body;
-            var css = inputFile.DependencyList.Where(x => x.MimeType.Contains("css") && x.Body != null)
-                .Aggregate(String.Empty, (current, dependency) => current + dependency.Body);
-            var js = inputFile.DependencyList.Where(x => x.MimeType.Contains("javascript") && x.Body != null)
-                .Aggregate(String.Empty, (current, dependency) => current + dependency.Body);
+            var css = BundleDependenciesByType(inputFile.DependencyList, "css");
+            var js = BundleDependenciesByType(inputFile.DependencyList, "javascript"); 
 
             //Optimization
             if(OptimizeHtml != null) html = OptimizeHtml(html);
@@ -82,18 +80,32 @@ namespace SpaBundler
             if (OptimizeJs != null) js = OptimizeJs(js);
 
             //Remove Imported dependency nodes 
-            foreach (var dependency in inputFile.DependencyList.Where(x => (x.MimeType.Contains("css") || x.MimeType.Contains("javascript")) && x.Body != null))
+            foreach (var dependency in inputFile.DependencyList.Where(x => (x.MimeType.Contains("css") || x.MimeType.Contains("javascript"))))
                 WebFileUtilities.RemoveReferenceNodes(ref html, dependency.ReferenceUri);
+
+            //Add Images to HTML file
+            html = inputFile.DependencyList.Where(x => (!x.MimeType.Contains("css") || !x.MimeType.Contains("javascript")))
+                .Aggregate(html, (current, d) => current.Replace(d.ReferenceUri, d.DataUri));
 
             WebFileUtilities.InsertNode(ref html,"head","style", css); //Add Styles
             WebFileUtilities.InsertNode(ref html, "body", "script", js); //Add Scripts
 
-            //Bundling 1st Layer Binary (Images)
-            html = inputFile.DependencyList.Where(x => (!x.MimeType.Contains("css") || !x.MimeType.Contains("javascript")) && x.Body != null)
-                .Aggregate(html, (current, d) => current.Replace(d.ReferenceUri, d.DataUri));
-
             outputFile.Body = html;
             return outputFile;
+        }
+
+        /// <summary>
+        /// Joins together web files of same type
+        /// </summary>
+        /// <param name="webFileList">A list of webfile</param>
+        /// <param name="fileType">String phrase contained in the mimetype of the file</param>
+        /// <returns>A string containing the bundled files.</returns>
+        private static string BundleDependenciesByType(IEnumerable<WebFile> webFileList, string fileType)
+        {
+            var acceptableTypes = new[] {"css", "javascript"};
+            Contract.Requires(acceptableTypes.Contains(fileType), "fileType is invalid");
+            return webFileList.Where(x => x.MimeType.Contains(fileType))
+                .Aggregate(String.Empty, (current, dependency) => current + dependency.Body);
         }
 
     }

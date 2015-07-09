@@ -2,11 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
 <head>
     <!--Styles-->
-    <link href="css/test.css" rel="stylesheet" />
+    <link href="css/test.css" rel="stylesheet"/>
+    <!--Test with broken refference-->
+    <link href="styles/{randomstyle}"/>
 </head>
 <body>
 <h1>This is a SpaBundler Test</h1>
 <img src="images/test.png"/>
+<!--Test with broken refference-->
+<img alt="LocationFlag" class="Flag" height="24" src="Images/States/{LocationFlag}" width="24" />
 
 <!--Scripts-->
 <!-- ReSharper disable once Html.PathError -->
