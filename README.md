@@ -33,7 +33,7 @@ Advanced With Optimizers:
                 html = Regex.Replace(html, @"<!--(?!\[)(.*?)-->", "");
                 return html.Trim();
             });
-			//Ajaz Minifier or any function you like
+			//Ajax Minifier or any function you like
             var minifier = new Minifier();
             bundler.OptimizeCss = (css => minifier.MinifyStyleSheet(css));
 
